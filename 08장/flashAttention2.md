@@ -31,23 +31,7 @@ GPU
 
 ### 🤔 우리가 Block을 6개 만들면?
 
-* SM0 → Block 0, Block 1
-* SM1 → Block 2, Block 3
-* SM2 → Block 4
-* SM3 → Block 5
-
-✔️ 일부 SM은 Block 2개 동시에 실행   
-✔️ 일부 SM은 Block 1개만 실행   
-✔️ 나중에 Block이 끝나면 **대기 중인 Block을 그 SM에서 또 실행**함 (스케줄링)   
-
----
-
-좋아요! 너무 좋아요, 그 예시를 이어서 **FlashAttention 2가 왜 더 효율적인지를** 바로 연결해서 설명해드릴게요.
-당신이 짚은 이 블록-할당 구조를 기준으로 생각하면 훨씬 명확해져요.
-
----
-
-## 🔁 다시 예시 리마인드 (Block 6개 / SM 4개)
+(Block 6개 / SM 4개)
 
 | SM 번호 | 처음 할당된 Block     |
 | ----- | ---------------- |
@@ -58,14 +42,18 @@ GPU
 
 * **Block은 query 하나당 하나라고 가정 중** (FlashAttention 1 기준)
 * Block 0~~5는 각각 query 0~~5에 대응
+  
+✔️ 일부 SM은 Block 2개 동시에 실행   
+✔️ 일부 SM은 Block 1개만 실행   
+✔️ 나중에 Block이 끝나면 **대기 중인 Block을 그 SM에서 또 실행**함 (스케줄링)   
 
 ---
 
 ## 😐 FlashAttention 1의 상황
 
 * **query 수 = 6** → **Block 수 = 6**
-* **SM 수 = 4**라면, 동시에 처리 가능한 Block은 4\~6개 사이 (자원 여유에 따라)
-* 지금은 block 크기가 커서 SM당 1\~2개밖에 못 넣는 상황이라고 가정
+* **SM 수 = 4**라면, 동시에 처리 가능한 Block은 4~6개 사이 (자원 여유에 따라)
+* 지금은 block 크기가 커서 SM당 1~2개밖에 못 넣는 상황이라고 가정
 
 결과적으로 이런 문제가 생김:
 
@@ -87,12 +75,12 @@ GPU
 
 | Query | Token 범위     | Block   | 할당된 SM    |
 | ----- | ------------ | ------- | --------- |
-| Q0    | Token 0\~15  | Block 0 | SM0       |
-| Q0    | Token 16\~31 | Block 1 | SM1       |
-| Q1    | Token 0\~15  | Block 2 | SM2       |
-| Q1    | Token 16\~31 | Block 3 | SM3       |
-| Q2    | Token 0\~15  | Block 4 | SM0 (재사용) |
-| Q2    | Token 16\~31 | Block 5 | SM1 (재사용) |
+| Q0    | Token 0~15  | Block 0 | SM0       |
+| Q0    | Token 16~31 | Block 1 | SM1       |
+| Q1    | Token 0~15  | Block 2 | SM2       |
+| Q1    | Token 16~31 | Block 3 | SM3       |
+| Q2    | Token 0~15  | Block 4 | SM0 (재사용) |
+| Q2    | Token 16~31 | Block 5 | SM1 (재사용) |
 
 → 🎉 이렇게 하면, **Query 수는 3개뿐이어도 Block 수를 6개로 늘릴 수 있음!**
 → 그리고 이 Block들이 여러 SM에 분산되므로 **SM 활용률이 확 뛰어오름**
@@ -116,8 +104,3 @@ GPU
 * → GPU 코어(SM)를 훨씬 더 잘 활용할 수 있음
 
 ---
-
-필요하다면 진짜 코드 수준에서 "query를 token 단위로 쪼개는 방식"이나,
-"블록 쪼개기 전략 (tiling, chunking)" 도 예제로 보여드릴게요.
-
-이제 좀 감이 잡히셨을까요? 😊
