@@ -44,5 +44,13 @@ $$
 | **FlashAttention**                | 계산 효율성과 메모리 최적화를 강화한 dot-product 변형    |
 
 ---
+## 🔍 그림에서 다시 보기
+
 ![image](https://github.com/user-attachments/assets/48eac98c-448f-484d-97d0-314810f89001)
+
+오른쪽: Scaled Dot-Product Attention (기본 단위)
+중간: Multi-Head Attention = 여러 Scaled Dot Attention의 조합
+왼쪽: Transformer 전체 구조
+👌Flash Attention은 보이지 않지만, 위의 계산을 GPU에 맞게 빠르게 만든 버전입니다.
+
 
