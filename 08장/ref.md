@@ -46,5 +46,5 @@ $$
 | **FlashAttention**                | 계산 효율성과 메모리 최적화를 강화한 dot-product 변형    |
 
 ---
-![image](https://github.com/user-attachments/assets/33428c5f-940e-4164-8e26-53907f0e9776)
+![image](https://github.com/user-attachments/assets/48eac98c-448f-484d-97d0-314810f89001)
 
