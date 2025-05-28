@@ -53,5 +53,9 @@ $$
 - 왼쪽: Transformer 전체 구조
 
 👌Flash Attention은 보이지 않지만, 위의 계산을 GPU에 맞게 빠르게 만든 버전입니다.
+```
+🟨 Scaled dot-product attention (오른쪽 박스)
+└── Q, K, V MatMul → Scale → Mask → Softmax → Dropout → MatMul(V)
+```
 
 
